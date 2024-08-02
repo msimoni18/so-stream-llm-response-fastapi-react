@@ -1,0 +1,2 @@
+fastapi[standard]
+langchain_community
