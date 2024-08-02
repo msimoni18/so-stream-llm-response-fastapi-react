@@ -4,7 +4,7 @@ Issue: Error occurs in `react` when trying to stream LLM response
 from `fastapi`. The print statement in `fastapi` shows the response
 is streaming, but an error is occurring in `react`.
 
-Source:
+Source: [https://stackoverflow.com/questions/78826168/how-to-stream-llm-response-from-fastapi-to-react](https://stackoverflow.com/questions/78826168/how-to-stream-llm-response-from-fastapi-to-react)
 
 ## Initial setup
 
@@ -20,7 +20,7 @@ Create environment from root and install packages:
 
 ### node
 
-Install frontend packages:
+Delete `package-lock.json` then install node packages:
 
 `npm install`
 
