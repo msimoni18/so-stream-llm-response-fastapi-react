@@ -4,7 +4,7 @@ import {
   EventStreamContentType,
 } from "@microsoft/fetch-event-source";
 
-class RetriableError extends Error {}
+// class RetriableError extends Error {}
 class FatalError extends Error {}
 
 const StreamResponseFetchEventSourcePost = ({ input }: { input: string }) => {
@@ -36,6 +36,7 @@ const StreamResponseFetchEventSourcePost = ({ input }: { input: string }) => {
             // client-side errors are usually non-retriable:
             throw new FatalError();
           } else {
+            // NOTE: This triggers for POST, but not GET. Not sure why
             console.log("retriableerror");
             // throw new RetriableError();
           }
