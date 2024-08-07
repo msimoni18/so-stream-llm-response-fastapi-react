@@ -1,18 +1,17 @@
 import { useState } from "react";
 import NoStreamResponse from "./components/NoStreamResponse";
-import StreamResponse from "./components/StreamResponse";
+import StreamResponseEventSource from "./components/StreamResponseEventSource";
+import StreamResponseFetchEventSourcePost from "./components/StreamResponseFetchEventSourcePost";
 
 function App() {
   const [input] = useState("What color is the sky?");
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 50 }}>
       <p>Question: {input}</p>
-      <hr />
-      <div style={{ display: "flex", gap: 50 }}>
-        <NoStreamResponse input={input} />
-        <StreamResponse input={input} />
-      </div>
+      <NoStreamResponse input={input} />
+      <StreamResponseEventSource input={input} />
+      <StreamResponseFetchEventSourcePost input={input} />
     </div>
   );
 }

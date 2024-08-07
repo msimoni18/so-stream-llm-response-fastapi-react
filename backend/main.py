@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -47,11 +49,6 @@ class Question(BaseModel):
     question: str
 
 
-@app.get('/test')
-def read_test():
-    return {'hello': 'world'}
-
-
 @app.post('/nostream')
 def no_stream_llm(question: Question):
     answer = chain.invoke({'input': question.question})
@@ -59,12 +56,39 @@ def no_stream_llm(question: Question):
     return {'answer': answer}
 
 
-def stream_answer(question):
+async def stream_answer(question):
     for chunk in chain.stream(question):
         print(chunk, end='', flush=True)
-        yield chunk
+        yield f'data: {chunk}\n\n'
+        await asyncio.sleep(0.25)
 
 
-@app.post('/stream')
-def stream_response_from_llm(question: Question):
-    return StreamingResponse(stream_answer(question=question.question), media_type="text/event-stream")
+@app.get('/stream-with-get')
+async def stream_response_from_llm_get(question: str):
+    return StreamingResponse(stream_answer(question=question), media_type='text/event-stream')
+
+
+@app.post('/stream-with-post')
+async def stream_response_from_llm_post(question: Question):
+    return StreamingResponse(stream_answer(question=question.question), media_type='text/event-stream')
+
+
+# Stuff below not used
+async def event_generator(stop):
+    for i in range(stop):
+        yield f"data: Message {i}\n\n"
+        await asyncio.sleep(1)
+
+
+@app.get("/stream3")
+async def stream(stop: int):
+    return StreamingResponse(event_generator(stop=stop), media_type="text/event-stream")
+
+
+class Stream4(BaseModel):
+    stop: int
+
+
+@app.post("/stream4")
+async def stream(inp: Stream4):
+    return StreamingResponse(event_generator(stop=inp.stop), media_type="text/event-stream")
